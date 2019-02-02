@@ -1,9 +1,23 @@
 console.clear();
 const path = require('path');
+const http = require('http');
+const express = require('express');
+const socketIo = require('socket.io');
+
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
-const express = require('express');
 var app = express();
+var server = http.createServer(app);
+var io = socketIo(server);
 app.use(express.static(publicPath));
-app.listen(port, () => console.log(`server is up on :${port}`));
+
+io.on('connection', (socket) => {
+  let ip = socket.request.connection.remoteAddress;
+  console.log(`${ip} is connected`);
+  socket.on('disconnect', (user) => {
+    console.log('a user has disconnected: ' + user.geobytesremoteip);
+  })
+})
+
+server.listen(port, () => console.log(`Server is up on :${port}`));
 
