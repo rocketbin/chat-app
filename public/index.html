@@ -2,12 +2,44 @@
 <html>
   <head>
     <meta charset = "utf-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" >
+    <script src="/js/jquery.js"></script>
     <script src = "/socket.io/socket.io.js"></script>
     <script src = "/js/index.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+      body {
+        margin-top: 30px;
+      }
+    </style>
   </head>
   <body>
-    <p>Welcome to the Chat-app.</p>
-    
+    <div class="container">
+      <div class="col-md-4">
+        <div class="well">
+          online users
+        </div>
+      </div>
+      <div class="col-md-8" >
+        <form class = "well" id = "messageForm" style = "display: flex">
+          <input type = "text" class = "form-control" id = "message" />
+          <input type = "submit" class = "btn btn-primary " value = "send" style = "margin-left:3px" />
+        </form>
+        <ul id = "messages"></ul>
+      </div>
+    </div>
   </body>
 </html>
+<script>
+$(function () {
+  $('#messageForm').on('submit', function (e){
+    e.preventDefault();
+    socket.emit('createMessage', {
+      from: 'User',
+      text: $('#message').val()
+    }, function (data){
+      console.log(data)
+      $('#message').val('')
+    })
+  })
+})
+</script>

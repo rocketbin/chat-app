@@ -1,12 +1,16 @@
   var socket = io();
   socket.on('connect', function () {
     socket.on('newMessage', function (message) {
-      console.log(message);
+      var li = $("<li class = 'well'></li>");
+      li.text(`${message.text}`);
+      $("#messages").append(li);
     })
     socket.emit('createMessage', {
-      'from': 'test',
-      'text': 'test'
-    })
+      from: 'frank',
+      text: 'hi!'
+    }, function (data) {
+      console.log(data);
+    });
   });
 
   socket.on('disconnect', function () {
