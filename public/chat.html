@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="/css/ninja.css" >
+    <title> Chat | ChatNinja </title>
+    <script src="/js/jquery.js"></script>
+    <script src = "/socket.io/socket.io.js"></script>
+    <script src = "/js/deparam.js"></script>
+    <style>
+      body {
+        margin-top: 30px;
+      }
+    ul {
+      list-style-type: none;
+    }
+    .list-group .fas {
+      margin-right: 5px;
+      color: whitesmoke;
+      font-size: 140%;
+    }
+    #messages li {
+      /*background: rgba(12,18,27,0.3) !important;*/
+      background: none !important;
+      border:none;
+      color:white;
+    }
+    #ninjas li {
+      display: flex;
+      background: none !important;
+      border:none;
+      color:white;
+    }
+    </style>
+  </head>
+  <body style = "background-image: linear-gradient(to bottom right, hsla(0, 100%, 30%, 0.3), rgba(52,25,35,0.8));background-attachment: fixed; background-repeat: no-repeat;">
+    <div class="container">
+      <div class="col-md-4">
+        <div class="well" style = "background: rgba(25,03,90,0.4);border: none;color:white">
+          <h4 class = "text-center"> Online Ninjas </h4>
+          <div id = "ninjas" >
+            
+          </div>
+          <ul class="list-group"></ul>
+        </div>
+      </div>
+      <div class="col-md-8" style = "" >
+        <div style="width:100%;display:flex;flex-direction: column;height:95vh;justify-content: space-between;">
+          <div style ="min-height: 80vh;max-height: 80vh;background: rgba(25,03,90,0.1);border-radius: 10px; padding:10px;overflow: auto;">
+            <ul id = "messages" class="list-group borderless"></ul>
+          </div>
+          <form class = "well" id = "messageForm" style ="max-height: 30vh; display: flex;background: rgba(25,03,90,0.4);border: none">
+            <input type = "text" class = "form-control" id = "message" placeholder="throw some shurikens..." />
+            <input type = "submit" class = "btn btn-primary " value = "Send" style = "margin-left:3px" />
+            <input type = "button" id = "send-location" class = "btn btn-warning " value = "Location" style = "margin-left:3px" />
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src = "/js/chat.js"></script>
+  </body>
+</html>
+<script>
+$(function () {
+  $("#send-location").click(function () {
+    if(!navigator.geolocation) {
+      alert('location is not available');
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      socket.emit('createLocationMessage', {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+    }, function () {
+      alert('unable to locate your position');
+    })
+  });
+  $('#messageForm').on('submit', function (e){
+    e.preventDefault();
+    socket.emit('createMessage', {
+      from: 'User',
+      text: $('#message').val()
+    }, function (data){
+      $('#message').val('')
+    })
+  })
+})
+</script>
