@@ -1,7 +1,7 @@
   var socket = io();
   socket.on('connect', function () {
     socket.on('newMessage', function (message) {
-      console.log(`new message ${message.text} from ${message.from}`);
+      console.log(message);
     })
     socket.emit('createMessage', {
       'from': 'test',
