@@ -10,6 +10,9 @@
       body {
         margin-top: 30px;
       }
+    ul {
+      list-style-type: none;
+    }
     </style>
   </head>
   <body>
@@ -22,7 +25,8 @@
       <div class="col-md-8" >
         <form class = "well" id = "messageForm" style = "display: flex">
           <input type = "text" class = "form-control" id = "message" />
-          <input type = "submit" class = "btn btn-primary " value = "send" style = "margin-left:3px" />
+          <input type = "submit" class = "btn btn-primary " value = "Send" style = "margin-left:3px" />
+          <input type = "button" id = "send-location" class = "btn btn-warning " value = "Location" style = "margin-left:3px" />
         </form>
         <ul id = "messages"></ul>
       </div>
@@ -31,13 +35,25 @@
 </html>
 <script>
 $(function () {
+  $("#send-location").click(function () {
+    if(!navigator.geolocation) {
+      alert('location is not available');
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      socket.emit('createLocationMessage', {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+    }, function () {
+      alert('unable to locate your position');
+    })
+  });
   $('#messageForm').on('submit', function (e){
     e.preventDefault();
     socket.emit('createMessage', {
       from: 'User',
       text: $('#message').val()
     }, function (data){
-      console.log(data)
       $('#message').val('')
     })
   })

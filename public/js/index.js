@@ -5,12 +5,13 @@
       li.text(`${message.text}`);
       $("#messages").append(li);
     })
-    socket.emit('createMessage', {
-      from: 'frank',
-      text: 'hi!'
-    }, function (data) {
-      console.log(data);
-    });
+
+    socket.on('newMessageLocation', function (message) {
+      var li = $("<li class = 'well text-center'></li>");
+      var a = $(`<a href='${message.url}' target='_blank'><h3>check my location</h3></a>`);
+      li.append(a);
+      $("#messages").append(li);
+    })
   });
 
   socket.on('disconnect', function () {
