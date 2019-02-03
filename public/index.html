@@ -3,6 +3,7 @@
   <head>
     <meta charset = "utf-8">
     <script src = "/socket.io/socket.io.js"></script>
+    <script src = "/js/index.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
   <body>
@@ -10,16 +11,3 @@
     
   </body>
 </html>
-<script>
-  var socket = io();
-  socket.on('connect', () => {
-    console.log('Connected to server!');
-  });
-
-  socket.on('disconnect', (_u) => {
-    console.log(_u)
-    console.log('disconnected from server!');
-  });
-
-
-</script>

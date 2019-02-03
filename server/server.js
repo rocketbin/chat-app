@@ -14,8 +14,16 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   let ip = socket.request.connection.remoteAddress;
   console.log(`${ip} is connected`);
+
+  socket.on('createMessage', (message) => {
+    socket.emit('newMessage', message);
+  })
+  socket.on('createEmail', (newEmail) => {
+    console.log(newEmail);
+  })
+
   socket.on('disconnect', (user) => {
-    console.log('a user has disconnected: ' + user.geobytesremoteip);
+    console.log(`${ip} is disconnected`);
   })
 })
 
